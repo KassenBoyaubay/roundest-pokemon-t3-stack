@@ -5,7 +5,7 @@ import { getOptionsForVote } from "../utils/getRandomPokemon";
 
 import { type RouterOutputs, trpc } from "../utils/trpc";
 
-const btn = "bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded";
+const btn = "bg-transparent hover:bg-blue-500 text-white-700 font-semibold hover:text-white py-2 px-4 border border-white-500 hover:border-transparent rounded";
 
 const Home: NextPage = () => {
   const [ids, updateIds] = useState(() => getOptionsForVote());
@@ -17,11 +17,17 @@ const Home: NextPage = () => {
 
   const hello = trpc.example.hello.useQuery({ text: "from tRPC" });
 
+  const voteMutation = trpc.pokemon.castVote.useMutation();
+
   if (firstPokemon.isLoading || secondPokemon.isLoading) return null;
 
   const voteForRoundest = (selected: number) => {
     // todo: fire mutation to persist changes
-
+    if (selected == first) {
+      voteMutation.mutate({ votedFor: first, votedAgainst: second });
+    } else {
+      voteMutation.mutate({ votedFor: second, votedAgainst: first });
+    }
     updateIds(getOptionsForVote());
   }
 
@@ -54,7 +60,7 @@ const PokemonListing: React.FC<{ pokemon: PokemonFromServer, vote: () => void }>
   return (
     <div className="flex flex-col items-center">
       <Image width={96} height={96} src={props.pokemon.sprites.front_default ?? ''} alt="first pokemon" />
-      <div className="text-xl text-center capitalize mt-[-2rem]">
+      <div className="text-xl text-center capitalize">
         {props.pokemon.name}
       </div>
       <button className={btn} onClick={() => props.vote()}>Rounder</button>
