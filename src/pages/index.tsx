@@ -1,5 +1,6 @@
 import { type NextPage } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
 import { getOptionsForVote } from "../utils/getRandomPokemon";
 
@@ -15,7 +16,7 @@ const Home: NextPage = () => {
   const firstPokemon = trpc.pokemon.getById.useQuery({ id: first });
   const secondPokemon = trpc.pokemon.getById.useQuery({ id: second });
 
-  const hello = trpc.example.hello.useQuery({ text: "from tRPC" });
+  const hello = trpc.example.hello.useQuery({ text: "from tRPC. It is working." });
 
   const voteMutation = trpc.pokemon.castVote.useMutation();
 
@@ -32,7 +33,7 @@ const Home: NextPage = () => {
   }
 
   return (
-    <div className="h-screen w-screen flex flex-col justify-center items-center">
+    <div className="h-screen w-screen flex flex-col justify-center items-center relative">
       <div className="text-2xl text-center m-2">Which Pokemon is Rounder?</div>
       <div className="border rounded p-8 flex justify-between items-center max-w-2xl">
         {!firstPokemon.isLoading &&
@@ -50,6 +51,9 @@ const Home: NextPage = () => {
       <p className="text-2xl text-white">
         {hello.data ? hello.data.greeting : "Loading tRPC query..."}
       </p>
+      <div className="absolute bottom-0 w-full text-xl text-center pb-2">
+        <Link href="https://github.com/KassenBoyaubay">Github</Link>
+      </div>
     </div>
   );
 };
