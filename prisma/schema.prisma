@@ -3,8 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
 model Task {
@@ -30,6 +31,21 @@ model Vote {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
 
-  votedFor     Int
-  votedAgainst Int
+  votedFor       Pokemon @relation(name: "votesFor", fields: [votedForId], references: [id])
+  votedForId     Int
+  votedAgainst   Pokemon @relation(name: "votesAgainst", fields: [votedAgainstId], references: [id])
+  votedAgainstId Int
+
+  @@index([votedForId])
+  @@index([votedAgainstId])
+}
+
+model Pokemon {
+  id Int @id
+
+  name      String
+  SpriteUrl String
+
+  VoteFor     Vote[] @relation("votesFor")
+  VoteAgainst Vote[] @relation("votesAgainst")
 }
