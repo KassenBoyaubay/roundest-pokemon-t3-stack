@@ -1,7 +1,7 @@
 import { type NextPage } from "next";
 import Image from "next/image";
-import Link from "next/link";
 import { useState } from "react";
+import Layout from "../../components/layout";
 import { getOptionsForVote } from "../utils/getRandomPokemon";
 
 import { type RouterOutputs, trpc } from "../utils/trpc";
@@ -39,11 +39,10 @@ const Home: NextPage = () => {
     secondPokemon.data
 
   return (
-    <div className="h-screen w-screen flex flex-col justify-between items-center relative">
-      <div className="text-2xl text-center pt-8">Which Pokemon is Rounder?</div>
+    <Layout>
       {dataLoaded &&
         (
-          <div className="border rounded p-8 flex justify-between items-center max-w-2xl">
+          <div className="p-8 flex justify-between items-center max-w-2xl">
             <PokemonListing pokemon={firstPokemon.data} vote={() => voteForRoundest(first)} />
             <div className="p-8">Vs</div>
             <PokemonListing pokemon={secondPokemon.data} vote={() => voteForRoundest(second)} />
@@ -53,11 +52,7 @@ const Home: NextPage = () => {
       <p className="text-2xl text-white">
         {hello.data ? hello.data.greeting : "Loading tRPC query..."}
       </p>
-      <div className="w-full text-xl text-center pb-2">
-        <Link href="https://github.com/KassenBoyaubay">Github</Link>{" | "}
-        <Link href="/results">Results</Link>
-      </div>
-    </div>
+    </Layout>
   );
 };
 
@@ -67,7 +62,7 @@ const PokemonListing: React.FC<{ pokemon: PokemonFromServer, vote: () => void }>
   return (
     <div className="flex flex-col items-center">
       <Image width={256} height={256} src={props.pokemon.spriteUrl ?? ''} alt="first pokemon" />
-      <div className="text-xl text-center capitalize">
+      <div className="text-xl text-center capitalize mb-4">
         {props.pokemon.name}
       </div>
       <button className={btn} onClick={() => props.vote()}>Rounder</button>

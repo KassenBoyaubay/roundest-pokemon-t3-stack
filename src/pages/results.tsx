@@ -1,5 +1,6 @@
-import type { GetServerSideProps } from "next"
+import type { GetStaticProps } from "next"
 import Image from "next/image"
+import Layout from "../../components/layout"
 import { prisma } from "../server/db/client"
 import type { AsyncReturnType } from "../utils/ts-bs"
 
@@ -34,20 +35,32 @@ const generateCountPercent = (pokemon: PokemonQueryResult[number]) => {
     return (VoteFor / (VoteFor + VoteAgainst)) * 100;
 }
 
-export const getStaticProps: GetServerSideProps = async () => {
+export const getStaticProps: GetStaticProps = async () => {
     const pokemonOrdered = await getPokemonInOrder();
-    return { props: { pokemon: pokemonOrdered }, revalidate: 60 }
+    return { props: { pokemon: pokemonOrdered }, revalidate: 5 }
 }
 
 const ResultsPage: React.FC<{ pokemon: PokemonQueryResult }> = (props) => {
-    return <div className="flex flex-col items-center">
-        <h1 className="text-2xl p-4">Results</h1>
-        <div className="flex flex-col w-full max-w-2xl border">
-            {props.pokemon.sort((a, b) => generateCountPercent(b) - generateCountPercent(a)).map((currentPokemon, index) => {
-                return <PokemonListing pokemon={currentPokemon} key={index} />
-            })}
-        </div>
-    </div>
+    return (
+        <Layout>
+            <h1 className="text-2xl p-4">Results</h1>
+            <div className="flex flex-col w-full max-w-2xl border overflow-y-auto">
+                {props.pokemon.sort((a, b) => {
+                    const difference =
+                        generateCountPercent(b) - generateCountPercent(a);
+
+                    if (difference === 0) {
+                        return b._count.VoteFor - a._count.VoteFor;
+                    }
+
+                    return difference;
+                }
+                ).map((currentPokemon, index) => {
+                    return <PokemonListing pokemon={currentPokemon} key={index} />
+                })}
+            </div>
+        </Layout>
+    )
 }
 
 const PokemonListing: React.FC<{ pokemon: PokemonQueryResult[number] }> = ({ pokemon }) => {
