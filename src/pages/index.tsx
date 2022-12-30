@@ -25,9 +25,9 @@ const Home: NextPage = () => {
   const voteForRoundest = (selected: number) => {
     // todo: fire mutation to persist changes
     if (selected == first) {
-      voteMutation.mutate({ votedFor: first, votedAgainst: second });
+      voteMutation.mutate({ votedForId: first, votedAgainstId: second });
     } else {
-      voteMutation.mutate({ votedFor: second, votedAgainst: first });
+      voteMutation.mutate({ votedForId: second, votedAgainstId: first });
     }
     updateIds(getOptionsForVote());
   }
