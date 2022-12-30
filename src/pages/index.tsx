@@ -32,27 +32,30 @@ const Home: NextPage = () => {
     updateIds(getOptionsForVote());
   }
 
+  const dataLoaded =
+    !firstPokemon.isLoading &&
+    firstPokemon.data &&
+    !secondPokemon.isLoading &&
+    secondPokemon.data
+
   return (
-    <div className="h-screen w-screen flex flex-col justify-center items-center relative">
-      <div className="text-2xl text-center m-2">Which Pokemon is Rounder?</div>
-      <div className="border rounded p-8 flex justify-between items-center max-w-2xl">
-        {!firstPokemon.isLoading &&
-          firstPokemon.data &&
-          !secondPokemon.isLoading &&
-          secondPokemon.data &&
-          (
-            <>
-              <PokemonListing pokemon={firstPokemon.data} vote={() => voteForRoundest(first)} />
-              <div className="p-8">Vs</div>
-              <PokemonListing pokemon={secondPokemon.data} vote={() => voteForRoundest(second)} />
-            </>
-          )}
-      </div>
+    <div className="h-screen w-screen flex flex-col justify-between items-center relative">
+      <div className="text-2xl text-center pt-8">Which Pokemon is Rounder?</div>
+      {dataLoaded &&
+        (
+          <div className="border rounded p-8 flex justify-between items-center max-w-2xl">
+            <PokemonListing pokemon={firstPokemon.data} vote={() => voteForRoundest(first)} />
+            <div className="p-8">Vs</div>
+            <PokemonListing pokemon={secondPokemon.data} vote={() => voteForRoundest(second)} />
+          </div>
+        )}
+      {!dataLoaded && (<Image width={192} height={192} src="/rings.svg" alt="loading" />)}
       <p className="text-2xl text-white">
         {hello.data ? hello.data.greeting : "Loading tRPC query..."}
       </p>
-      <div className="absolute bottom-0 w-full text-xl text-center pb-2">
-        <Link href="https://github.com/KassenBoyaubay">Github</Link>
+      <div className="w-full text-xl text-center pb-2">
+        <Link href="https://github.com/KassenBoyaubay">Github</Link>{" | "}
+        <Link href="/results">Results</Link>
       </div>
     </div>
   );
