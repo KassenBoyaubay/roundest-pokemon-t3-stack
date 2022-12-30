@@ -5,14 +5,18 @@ import { router, publicProcedure } from "../trpc";
 import { PokemonClient } from "pokenode-ts";
 
 import { prisma } from "../../db/client"
+import { TRPCError } from "@trpc/server";
 
 export const pokemonRouter = router({
     getById: publicProcedure
         .input(z.object({ id: z.number() }))
         .query(async ({ input }) => {
-            const api = new PokemonClient();
-            const pokemon = await api.getPokemonById(input.id);
-            return { name: pokemon.name, sprites: pokemon.sprites };
+            const pokemon = await prisma.pokemon.findFirst({ where: { id: input.id } })
+            if (!pokemon) throw new TRPCError({
+                code: 'NOT_FOUND',
+                message: 'pokemon doesn\'t exist',
+            })
+            return pokemon;
         })
     ,
     castVote: publicProcedure

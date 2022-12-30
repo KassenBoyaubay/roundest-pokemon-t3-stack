@@ -63,7 +63,7 @@ type PokemonFromServer = RouterOutputs["pokemon"]["getById"];
 const PokemonListing: React.FC<{ pokemon: PokemonFromServer, vote: () => void }> = (props) => {
   return (
     <div className="flex flex-col items-center">
-      <Image width={256} height={256} src={props.pokemon.sprites.front_default ?? ''} alt="first pokemon" />
+      <Image width={256} height={256} src={props.pokemon.spriteUrl ?? ''} alt="first pokemon" />
       <div className="text-xl text-center capitalize">
         {props.pokemon.name}
       </div>
