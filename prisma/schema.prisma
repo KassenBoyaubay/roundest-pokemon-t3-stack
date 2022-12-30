@@ -44,7 +44,7 @@ model Pokemon {
   id Int @id
 
   name      String
-  SpriteUrl String
+  spriteUrl String
 
   VoteFor     Vote[] @relation("votesFor")
   VoteAgainst Vote[] @relation("votesAgainst")
