@@ -56,7 +56,7 @@ const PokemonListing: React.FC<{ pokemon: PokemonQueryResult[number] }> = ({ pok
             <Image width={64} height={64} src={pokemon.spriteUrl ?? ''} alt="pokemon" />
             <div className="capitalize">{pokemon.name}</div>
         </div>
-        <div className="pr-4">{generateCountPercent(pokemon) + "%"}</div>
+        <div className="pr-4">{generateCountPercent(pokemon).toFixed(2) + "%"}</div>
     </div>
 }
 export default ResultsPage;
