@@ -1,7 +1,7 @@
 import { type NextPage } from "next";
 import Image from "next/image";
 import { useState } from "react";
-import Layout from "../../components/layout";
+import Layout from "../components/layout";
 import { getOptionsForVote } from "../utils/getRandomPokemon";
 
 import { type RouterOutputs, trpc } from "../utils/trpc";

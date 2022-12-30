@@ -1,6 +1,6 @@
 import type { GetStaticProps } from "next"
 import Image from "next/image"
-import Layout from "../../components/layout"
+import Layout from "../components/layout"
 import { prisma } from "../server/db/client"
 import type { AsyncReturnType } from "../utils/ts-bs"
 
