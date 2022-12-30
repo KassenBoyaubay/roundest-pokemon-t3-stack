@@ -3,6 +3,8 @@ import Image from "next/image"
 import { prisma } from "../server/db/client"
 import type { AsyncReturnType } from "../utils/ts-bs"
 
+type PokemonQueryResult = AsyncReturnType<typeof getPokemonInOrder>
+
 const getPokemonInOrder = async () => {
     return await prisma.pokemon.findMany({
         orderBy: {
@@ -24,7 +26,13 @@ const getPokemonInOrder = async () => {
     })
 }
 
-type PokemonQueryResult = AsyncReturnType<typeof getPokemonInOrder>
+const generateCountPercent = (pokemon: PokemonQueryResult[number]) => {
+    const { VoteFor, VoteAgainst } = pokemon._count;
+    if (VoteFor + VoteAgainst === 0) {
+        return 0;
+    }
+    return (VoteFor / (VoteFor + VoteAgainst)) * 100;
+}
 
 export const getStaticProps: GetServerSideProps = async () => {
     const pokemonOrdered = await getPokemonInOrder();
@@ -42,10 +50,13 @@ const ResultsPage: React.FC<{ pokemon: PokemonQueryResult }> = (props) => {
     </div>
 }
 
-const PokemonListing: React.FC<{ pokemon: PokemonQueryResult[number] }> = (props) => {
-    return <div className="flex border-b p-2 items-center">
-        <Image width={64} height={64} src={props.pokemon.spriteUrl ?? ''} alt="pokemon" />
-        <div className="capitalize">{props.pokemon.name}</div>
+const PokemonListing: React.FC<{ pokemon: PokemonQueryResult[number] }> = ({ pokemon }) => {
+    return <div className="flex border-b p-2 items-center justify-between">
+        <div className="flex items-center">
+            <Image width={64} height={64} src={pokemon.spriteUrl ?? ''} alt="pokemon" />
+            <div className="capitalize">{pokemon.name}</div>
+        </div>
+        <div className="pr-4">{generateCountPercent(pokemon) + "%"}</div>
     </div>
 }
 export default ResultsPage;
