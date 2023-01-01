@@ -2,6 +2,27 @@
 
 https://roundest-pokemon-t3-stack.vercel.app/
 
+# Technologies
+
+## T3 stack:
+
+- tRPC
+- Prisma (MySQL)
+- NextJs
+- Typescript
+- Tailwind
+- zod - schema validation & type generation
+
+## Database
+
+- PlanetScale
+
+## Deployment
+
+- Vercel
+
+-----------------------------------------
+
 # Create T3 App
 
 This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
